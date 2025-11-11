@@ -1,0 +1,30 @@
+// assets/js/app.js
+
+import { applyTranslations, setLang, getLang } from './i18n.js';
+import { initRegisterPage, initLoginPage, initHomePage } from './auth.js';
+import { initPasskeysPage } from './passkeys.js';
+import { initSettingsPage, passwordMeetsRequirements } from './settings.js';
+import { $ } from './utils.js';
+
+window.passwordMeetsRequirements = passwordMeetsRequirements;
+
+document.addEventListener('DOMContentLoaded', () => {
+  
+  document.querySelectorAll('#langSelect').forEach(sel=>{
+    sel.value = getLang();
+    sel.addEventListener('change', (e)=> { setLang(e.target.value); });
+  });
+
+  applyTranslations();
+
+  const page = document.body.dataset.page || '';
+
+  const btnGotIt = $('tutorialGotIt'); if(btnGotIt) btnGotIt.addEventListener('click', ()=> { const m = $('tutorialModal'); if(m) m.classList.add('hidden'); });
+  const btnDontShow = $('tutorialDontShow'); if(btnDontShow) btnDontShow.addEventListener('click', ()=> { localStorage.setItem('securepass_tutorial_hide','true'); const m = $('tutorialModal'); if(m) m.classList.add('hidden'); });
+
+  if(page === 'register') initRegisterPage();
+  if(page === 'login') initLoginPage();
+  if(page === 'home') initHomePage();
+  if(page === 'passkeys') initPasskeysPage();
+  if(page === 'settings') initSettingsPage();
+});
